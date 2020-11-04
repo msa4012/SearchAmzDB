@@ -1,8 +1,9 @@
-package SearchAmz;
+package AmazonTesting;
 
 
 
 import java.sql.*;
+import java.text.ParseException;
 import java.util.Scanner;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -17,27 +18,12 @@ public class DBConnection {
 	private static Statement stmt;
 	private static ResultSet rs;
 	private static PreparedStatement pstmt;
-	
-	
-	public static void main(String args[])  {
-		DBConnection d1 = new DBConnection();
-		
-		d1.insertRecord();
-		
-		
-	}
-	
-	
-	public void insertRecord() {
-		//hardcoding - run more than once and see what happens
-		//String query2 = "Insert into coolthings.cars_tbl (car_regn, car_model, car_color, car_mileage) \n" +
-		//				"values ('GA02 BB 1234','Lotus', 'Black', 2700)";
-		
-		//Prepared statement
-		
+
+	public void insertRecord(AmazonProduct p1) {
+				
 		String query2 = "Insert into jdbctesting.list_tbl (list_id, list_NAME) values (?,?)";
 		
-		//Scanner s2 = new Scanner(System.in);
+		Scanner s2 = new Scanner(System.in);
 		
 		try {
 			try {
@@ -48,20 +34,25 @@ public class DBConnection {
 			}
 			
 			con=DriverManager.getConnection(db, user, pwd);
+			con.setAutoCommit(false);
 			
 			pstmt = con.prepareStatement(query2);
-			System.out.println("Car regn:");
-			pstmt.setString(1, s2.nextLine());
-			System.out.println("Car model:");
-			pstmt.setString(2, s2.nextLine());
-			System.out.println("Car color:");
-			pstmt.setString(3, s2.nextLine());
-			System.out.println("Kms run:");
-			pstmt.setInt(4, s2.nextInt());
 			
+			pstmt.setInt(1, p1.id);
+			
+			pstmt.setString(2, p1.productName);
+						
 			int ret = pstmt.executeUpdate();
 			if (ret == 1) {
 				System.out.println("Successfully added a new record");
+				if(p1.productName.contains("Black")) {
+				con.rollback();
+				System.out.println("Successfully Rolled back");
+				}
+				else {
+					con.commit();
+					System.out.println("Successfully added a new record");
+				}
 			}
 			else {
 				System.out.println("Unable to add a new record");
@@ -81,9 +72,15 @@ public class DBConnection {
 	}
 	
 	}
+
+
+	public static Connection initializeDatabase() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 
 
 }
 
-} 
+ 

@@ -26,7 +26,7 @@ import java.util.Set;
 public class SearchPage {
 	private static WebDriver driver;
 	
-    public static void main(String[] args) {
+public static void main(String[] args) {
         // declaration and instantiation of objects/variables
     //	System.setProperty("webdriver.gecko.driver","C:\\geckodriver.exe");
 	//	WebDriver driver = new FirefoxDriver();
